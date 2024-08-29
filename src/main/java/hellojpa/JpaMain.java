@@ -16,17 +16,10 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setId(1L);
-            member.setName("helloA");
-
-            //1차 캐시 저장
-            em.persist(member);
-
-            //1차 캐시 조회 -> 쿼리 생략
-            Member findMember = em.find(Member.class, 1L);
-            System.out.println("findMember.getId() = " + findMember.getId());
-            System.out.println("findMember.getName() = " + findMember.getName());
+            //동일성 보장
+            Member findMember1 = em.find(Member.class, 1L);
+            Member findMember2 = em.find(Member.class, 1L);
+            System.out.println("result = " + (findMember1 == findMember2)); //true
 
             tx.commit();
         } catch (Exception e) {
