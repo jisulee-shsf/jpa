@@ -16,14 +16,11 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member1 = new Member(2L, "A");
-            Member member2 = new Member(3L, "B");
-
-            em.persist(member1);
-            em.persist(member2);
+            Member findMember = em.find(Member.class, 3L);
+            findMember.setName("C");
             System.out.println("=====");
 
-            //트랜잭션 지원 쓰기 지연 -> INSERT SQL
+            //변경 감지
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
