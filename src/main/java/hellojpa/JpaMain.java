@@ -18,39 +18,18 @@ public class JpaMain {
         tx.begin();
 
         try {
-//            //1. 연관관계 주인에 값을 입력하지 않은 경우
-//            Member member = new Member();
-//            member.setUsername("userA");
-//            em.persist(member);
-//
-//            Team team = new Team();
-//            team.setName("teamA");
-//            team.getMembers().add(member);
-//            em.persist(team);
-//
-//            //2. 연관관계 주인에 값을 입력한 경우
-//            Team team = new Team();
-//            team.setName("teamA");
-//            em.persist(team);
-//
-//            Member member = new Member();
-//            member.setUsername("userA");
-//            member.setTeam(team);
-//            em.persist(member);
-
-            //3. 양방향에 값을 입력한 경우
             Team team = new Team();
             team.setName("teamA");
             em.persist(team);
 
             Member member = new Member();
             member.setUsername("userA");
-            member.setTeam(team);
+            member.changeTeam(team); //연관관계 편의 메서드
             em.persist(member);
 
-            team.getMembers().add(member);
-            em.flush();
-            em.clear();
+//            team.getMembers().add(member);
+//            em.flush();
+//            em.clear();
 
             Team findTeam = em.find(Team.class, team.getId());
             List<Member> members = findTeam.getMembers();
