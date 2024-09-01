@@ -8,6 +8,7 @@ public class Member {
     @Id @GeneratedValue
     @Column(name = "MEMBER_ID")
     private Long Id;
+
     @Column(name = "USERNAME")
     private String username;
 
@@ -35,9 +36,7 @@ public class Member {
         return team;
     }
 
-    //연관관계 편의 메서드
-    public void changeTeam(Team team) {
+    public void setTeam(Team team) {
         this.team = team;
-        team.getMembers().add(this);
     }
 }
