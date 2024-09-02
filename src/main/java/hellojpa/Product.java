@@ -1,9 +1,9 @@
 package hellojpa;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -13,4 +13,7 @@ public class Product {
     private Long id;
 
     private String name;
+
+    @ManyToMany(mappedBy = "products")
+    private List<Member> members = new ArrayList<>();
 }
