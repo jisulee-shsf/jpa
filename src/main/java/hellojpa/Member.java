@@ -12,30 +12,8 @@ public class Member {
     @Column(name = "MEMBER_ID")
     private Long Id;
 
-    @Column(name = "USERNAME")
-    private String username;
+    private String name;
 
-    @OneToOne
-    @JoinColumn(name = "LOOKER_ID")
-    private Locker locker;
-
-    @ManyToMany
-    @JoinTable(name = "MEMBER_PRODUCT")
-    private List<Product> products = new ArrayList<>();
-
-    public Long getId() {
-        return Id;
-    }
-
-    public void setId(Long id) {
-        Id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
 }
