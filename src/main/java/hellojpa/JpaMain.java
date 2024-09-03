@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
+import java.util.List;
+
 public class JpaMain {
 
     public static void main(String[] args) {
@@ -16,29 +18,46 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Team team = new Team();
-            team.setName("team");
-            em.persist(team);
+            // 1. 즉시 로딩
+//            Team team = new Team();
+//            team.setName("team");
+//            em.persist(team);
+//
+//            Member member = new Member();
+//            member.setName("user");
+//            member.setTeam(team);
+//            em.persist(member);
+//
+//            em.flush();
+//            em.clear();
+//
+//            Member findMember = em.find(Member.class, member.getId());
+//            System.out.println("findMember.getTeam().getClass() = " + findMember.getTeam().getClass()); //class hellojpa.Team
+//            System.out.println("findMember.getTeam().getName() = " + findMember.getTeam().getName()); //team
 
-            Member member = new Member();
-            member.setName("user");
-            member.setTeam(team);
-            em.persist(member);
+            //2. N+1 문제
+            Team team1 = new Team();
+            team1.setName("team1");
+            em.persist(team1);
+
+            Team team2 = new Team();
+            team2.setName("team2");
+            em.persist(team2);
+
+            Member member1 = new Member();
+            member1.setName("member1");
+            member1.setTeam(team1);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setName("member2");
+            member2.setTeam(team2);
+            em.persist(member2);
 
             em.flush();
             em.clear();
 
-            Member findMember = em.find(Member.class, member.getId());
-            System.out.println("findMember.getTeam().getClass() = " + findMember.getTeam().getClass()); //class hellojpa.Team$HibernateProxy$I4NGCADD
-            System.out.println("isLoaded(findMember.getTeam()) = " + emf.getPersistenceUnitUtil().isLoaded(findMember.getTeam())); //false
-            System.out.println("findMember.getTeam() = " + findMember.getTeam()); //hellojpa.Team@794f11cd
-            System.out.println("team = " + team); //hellojpa.Team@31973858
-
-            findMember.getTeam().getName(); //프록시 객체 초기화
-            System.out.println("findMember.getTeam().getClass() = " + findMember.getTeam().getClass()); //class hellojpa.Team$HibernateProxy$I4NGCADD
-            System.out.println("isLoaded(findMember.getTeam()) = " + emf.getPersistenceUnitUtil().isLoaded(findMember.getTeam())); //true
-            System.out.println("findMember.getTeam() = " + findMember.getTeam()); //hellojpa.Team@794f11cd
-            System.out.println("team = " + team); //hellojpa.Team@31973858
+            List<Member> result = em.createQuery("select m from Member m", Member.class).getResultList();
 
             tx.commit();
         } catch (Exception e) {
