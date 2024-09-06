@@ -5,9 +5,6 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
-import java.util.List;
-import java.util.Set;
-
 public class JpaMain {
 
     public static void main(String[] args) {
@@ -28,7 +25,7 @@ public class JpaMain {
             member.getFavoriteFoods().add("foodB");
 
             member.getAddressHistory().add(new Address("cityA", "street", "20000"));
-            member.getAddressHistory().add(new Address("cityB", "street", "310000"));
+            member.getAddressHistory().add(new Address("cityB", "street", "30000"));
             em.persist(member);
 
             em.flush();
@@ -36,18 +33,21 @@ public class JpaMain {
 
             System.out.println("=====");
 
-            //2. 값 타입 조회
+            //2. 값 타입 수정
+            //2-1. private Address homeAddress;
             Member findMember = em.find(Member.class, member.getId());
 
-            Set<String> favoriteFoods = findMember.getFavoriteFoods();
-            for (String favoriteFood : favoriteFoods) {
-                System.out.println("favoriteFood = " + favoriteFood);
-            }
+//            findMember.getHomeAddress().setCity("newCity");
+            Address oldAddress = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity", oldAddress.getStreet(), oldAddress.getZipcode()));
 
-            List<Address> addressHistory = findMember.getAddressHistory();
-            for (Address address : addressHistory) {
-                System.out.println("address = " + address.getCity());
-            }
+            //2-2. private Set<String> favoriteFoods = new HashSet<>();
+            findMember.getFavoriteFoods().remove("foodA");
+            findMember.getFavoriteFoods().add("foodAAA");
+
+            //2-3. private List<Address> addressHistory = new ArrayList<>();
+            findMember.getAddressHistory().remove(new Address("cityA", "street", "20000"));
+            findMember.getAddressHistory().add(new Address("cityAAA", "street", "20000"));
 
             tx.commit();
         } catch (Exception e) {
