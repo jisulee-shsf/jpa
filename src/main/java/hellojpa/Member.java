@@ -3,7 +3,7 @@ package hellojpa;
 import jakarta.persistence.*;
 
 @Entity
-public class Member extends BaseEntity {
+public class Member {
 
     @Id @GeneratedValue
     @Column(name = "MEMBER_ID")
@@ -11,9 +11,8 @@ public class Member extends BaseEntity {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "TEAM_ID")
-    private Team team;
+    @Embedded
+    private Address address;
 
     public Long getId() {
         return Id;
@@ -31,11 +30,11 @@ public class Member extends BaseEntity {
         this.name = name;
     }
 
-    public Team getTeam() {
-        return team;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
