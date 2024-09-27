@@ -46,25 +46,16 @@ public class JpaMain {
 
             System.out.println("==========");
 
-            String query1 = "select m from Member m";
-            List<Member> result1 = em.createQuery(query1, Member.class)
+            //페이징 API 사용 불가 -> WARN: HHH90003004: firstResult/maxResults specified with collection fetch; applying in memory
+            String query = "select t from Team t join fetch t.members";
+            List<Team> result = em.createQuery(query, Team.class)
+                    .setFirstResult(0)
+                    .setMaxResults(1)
                     .getResultList();
 
-            //다대일 페치 조인 사용
-            String query2 = "select m from Member m join fetch m.team";
-            List<Member> result2 = em.createQuery(query2, Member.class)
-                    .getResultList();
+            System.out.println("result = " + result.size());
 
-            for (Member member : result2) {
-                System.out.println("member = " + member.getUsername() + " / " + member.getTeam().getName());
-            }
-
-            //일대다 페치 조인 사용
-            String query3 = "select t from Team t join fetch t.members";
-            List<Team> result3 = em.createQuery(query3, Team.class)
-                    .getResultList();
-
-            for (Team team : result3) {
+            for (Team team : result) {
                 System.out.println("team = " + team.getName() + " / " + team.getMembers().size());
                 for (Member member : team.getMembers()) {
                     System.out.println(" -> member = " + member);
